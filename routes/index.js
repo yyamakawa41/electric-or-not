@@ -5,9 +5,10 @@ var MongoClient = require ('mongodb').MongoClient;
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-	MongoClient.connect('mongodb://localhost:27017/mongotest', function(error, db){
-		db.collection('teams').find().toArray(function(error, result){
+	MongoClient.connect('mongodb://localhost:27017/hockeyTeam', function(error, db){
+		db.collection('hockeyTeam').find().toArray(function(error, result){
 			console.log(result);
+			res.render('index', { photos: result });
 		})
 	});
 
@@ -24,7 +25,7 @@ router.get('/', function(req, res, next) {
 	{name: 'https://c2.staticflickr.com/2/1307/4700132636_cd67861c4b_b.jpg'}	
 
 	];
-  res.render('index', { photos: serverPhotos });
+  
 });
 
 

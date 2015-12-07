@@ -6,21 +6,15 @@
 	<% include header %>
 </header>
 
-<p>Here is the BODY!!!</p>
+<p>Pick a Winner</p>
 
-<% var printVar = "Print Me"; %>
+<% var random = Math.floor(Math.random()*photos.length) %>
 
-	<div id="here is a div">
-		<%= printVar %>
-	</div>
+	
+	<img src="<%= photos[random].src %>">
 
-<%
-	for (i=0; i<photos.length; i++){
-%>
-		<img src="<%= photos[i].name %>">
-<%
-	}
-%>
+<button class='btn btn-success'>Winner</button>
+<button class='btn btn-danger'>Loser</button>
 
 <footer>
 	<% include footer %>
