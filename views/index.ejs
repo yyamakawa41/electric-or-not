@@ -9,12 +9,23 @@
 <p>Pick a Winner</p>
 
 <% var random = Math.floor(Math.random()*photos.length) %>
+<% var random2 = Math.floor(Math.random()*photos.length) %>
 
+	<div id="leftContainer">
+		<img src="<%= photos[random].src %>">
+		<form class='vote-button' action='./winners' method="post">
+			<input type="hidden" name='src' value='<%=photos[random].src%>'>
+			<button id='leftBtn' class='btn btn-success'>Winner</button>
+		</form>
+	</div>
 	
-	<img src="<%= photos[random].src %>">
-
-<button class='btn btn-success'>Winner</button>
-<button class='btn btn-danger'>Loser</button>
+	<div id="rightContainer">
+		<img src="<%= photos[random2].src %>">
+		<form class='vote-button' action='./winners' method="post">
+			<input type="hidden" name='src' value='<%=photos[random2].src%>'>
+			<button id='rightBtn' class='btn btn-primary'>Winner</button>
+		</form>
+	</div>
 
 <footer>
 	<% include footer %>
