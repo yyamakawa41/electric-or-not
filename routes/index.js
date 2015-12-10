@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var MongoClient = require ('mongodb').MongoClient;
+var mongoUrl = "mongodb://localhost:27017/electric-or-not/hockeyTeam";
+var db;
+var mongoose = require('mongoose');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -53,7 +56,9 @@ router.post('*', function(req,res,next){
 			};
 
 			MongoClient.connect(mongoUrl, function(error, db) {
+				console.log(result);
 				updateVotes(db,result[0].totalVotes, function() {});
+
 			});
 		});
 	});	
