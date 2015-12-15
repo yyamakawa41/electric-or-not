@@ -1,21 +1,20 @@
 var express = require('express');
 var router = express.Router();
 var MongoClient = require ('mongodb').MongoClient;
-var mongoUrl = "mongodb://localhost:27017/electric-or-not/hockeyTeam";
+var mongoUrl = "mongodb://localhost:27017/hockeyTeam";
 var db;
 var mongoose = require('mongoose');
+var Team = require('../models/teams')
+db = mongoose.createConnection(mongoUrl)
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
 
-	MongoClient.connect('mongodb://localhost:27017/hockeyTeam', function(error, db){
-		db.collection('hockeyTeam').find().toArray(function(error, result){
+		Team.find(function(error, result){
 			console.log(result);
 			res.render('index', { photos: result });
 		})
-	});
-
-
 
 
 
@@ -36,39 +35,31 @@ router.get('/', function(req, res, next) {
   
 });
 
-router.post('*', function(req,res,next){
+router.post('notUsed', function(req,res,next){
 	
-	MongoClient.connect(mongoUrl, function(error, db){
-		db.collection('photos').find({src: req.body.src}).toArray(function(error, result){
-			var updateVotes = function(db, votes, callback) {
-				var newVotes = votes+1;
-				
-				
-			   db.collection('photos').updateOne(
-			      { "src" : req.body.src },
-			      {
-			        $set: { "totalVotes": newVotes },
-			        $currentDate: { "lastModified": true }
-			      }, function(err, results) {
-			      console.log(results);
-			      callback();
-			   });
-			};
-
-			MongoClient.connect(mongoUrl, function(error, db) {
-				console.log(result);
-				updateVotes(db,result[0].totalVotes, function() {});
-
-			});
-		});
-	});	
+	
 });
 
 router.get('/standings', function(req, res, next){
 	// 1. get All the photos
 	// 2. sort them by the highest likes
 	// 3. res.render the standings view and pass it the sorted photo array
-	res.render('standings', {title:'Standings'});
+
+	//Get all teams.
+		Team.find(function(error, result){
+			//we have all teams
+			//now, figure out who has the highest win % by wins / totalvotes
+			//Create a new array that holds all teh win% + team
+			//Sort by win%
+			//send the array to standings view below
+			var standingsWinPercentage = []
+			res.render('standings', {standingsWinPercentage:'Standings'});
+		})
+
+
+	//Send 
+
+	
 });
 
 router.post('/winners', function(req, res, next){
@@ -77,24 +68,31 @@ router.post('/winners', function(req, res, next){
 		db.collection('users').insertOne({
 			ip: req.ip,
 			vote: 'winner',
-			image: req.body
+			image: req.body.srcWinner
+		})
+		db.collection('users').insertOne({
+			ip: req.ip,
+			vote: 'loser',
+			image: req.body.srcLoser
 		})
 	})
-	res.redirect('../');
+
+	Team.findOne({ imagePath: req.body.srcWinner }, function (err, doc){
+		var newVotes = doc.totalVotes + 1;
+		var newWins = doc.wins + 1;
+ 		doc.totalVotes = newVotes;
+ 		doc.wins = newWins;
+ 		doc.save();
+	});
+
+	Team.findOne({ imagePath: req.body.srcLoser }, function (err, doc){
+		var newVotes = doc.totalVotes + 1
+ 		doc.totalVotes = newVotes;
+ 		doc.save();
+	}); 
+		
+	res.redirect('/');
 });
-
-
-// router.post('/losers', function(req, res, next){
-// 	// this will run for all posted pages
-// 	MongoClient.connect('mongodb://localhost:27017/hockeyTeam', function (error, db){
-// 		db.collection('users').insertOne({
-// 			ip: req.ip,
-// 			vote: 'loser',
-// 			image: req.body
-// 		})
-// 	})
-// 	res.redirect('../');
-// });
 
 module.exports = router;
 

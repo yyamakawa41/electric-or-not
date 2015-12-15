@@ -12,17 +12,21 @@
 <% var random2 = Math.floor(Math.random()*photos.length) %>
 
 	<div id="leftContainer">
-		<img src="<%= photos[random].src %>">
+		<img src="<%= photos[random].imagePath %>">
 		<form class='vote-button' action='./winners' method="post">
-			<input type="hidden" name='src' value='<%=photos[random].src%>'>
+			<input type="hidden" name='srcWinner' value='<%=photos[random].imagePath%>'>
+			<input type="hidden" name='srcLoser' value='<%=photos[random2].imagePath%>'>
+
 			<button id='leftBtn' class='btn btn-success'>Winner</button>
 		</form>
 	</div>
 	
 	<div id="rightContainer">
-		<img src="<%= photos[random2].src %>">
+		<img src="<%= photos[random2].imagePath %>">
 		<form class='vote-button' action='./winners' method="post">
-			<input type="hidden" name='src' value='<%=photos[random2].src%>'>
+			<input type="hidden" name='srcWinner' value='<%=photos[random2].imagePath%>'>
+			<input type="hidden" name='srcLoser' value='<%=photos[random].imagePath%>'>
+
 			<button id='rightBtn' class='btn btn-primary'>Winner</button>
 		</form>
 	</div>

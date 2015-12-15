@@ -9,4 +9,4 @@ var photoSchema = new Schema({
 	totalVotes: Number
 });
 
-module.exports = mongoose.model('teams', photoSchema)
+module.exports = mongoose.model('teams2', photoSchema)
